@@ -29,7 +29,7 @@ class EventBookingRequest extends FormRequest
     public function rules()
     {
         return [
-            'starts_at' => ['bail', 'required', 'date', 'after:now', $this->mustNotBePublicHoliday(), $this->validateAdvanceBooking(), $this->mustBeValidTimeSlot(), $this->validateMaxBookings()],
+            'starts_at' => ['bail', 'required', 'date', 'after:now', $this->validateMinMinutesBeforeStarts(), $this->mustNotBePublicHoliday(), $this->validateAdvanceBooking(), $this->mustBeValidTimeSlot(), $this->validateMaxBookings()],
             'email_address' => ['required', 'email', Rule::unique('bookings')->where('event_id', $this->event->id)->where('starts_at', $this->startsAt())],
             'first_name' => ['required'],
             'last_name' => ['required']
@@ -43,6 +43,15 @@ class EventBookingRequest extends FormRequest
         ];
     }
 
+    public function validateMinMinutesBeforeStarts()
+    {
+        return function ($attribute, $value, $fail) {
+            if (now()->diffInMinutes($this->startsAt()) < $this->event->min_minutes_before_start) {
+                $fail("The minimum minutes before booking can be done is {$this->event->min_minutes_before_start}");
+            }
+        };
+    }
+    
     public function mustNotBePublicHoliday()
     {
         return function ($attribute, $value, $fail) {

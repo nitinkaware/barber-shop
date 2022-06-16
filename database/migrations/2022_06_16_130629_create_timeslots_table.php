@@ -13,14 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('timeslots', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->integer('event_duration_minutes');
-            $table->integer('cleaning_duration_minutes');
-            $table->integer('advance_booking_days');
-            $table->integer('min_minutes_before_start');
-            $table->integer('max_bookings_per_slot');
             $table->timestamps();
         });
     }
@@ -32,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('timeslots');
     }
 };

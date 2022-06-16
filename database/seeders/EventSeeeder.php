@@ -21,6 +21,7 @@ class EventSeeeder extends Seeder
                 'event_duration_minutes' => '10',
                 'cleaning_duration_minutes' => '5',
                 'advance_booking_days' => '7',
+                'min_minutes_before_start' => '10',
                 'max_bookings_per_slot' => '3',   
             ],
             [
@@ -28,6 +29,7 @@ class EventSeeeder extends Seeder
                 'event_duration_minutes' => '30',
                 'cleaning_duration_minutes' => '10',
                 'advance_booking_days' => '7',
+                'min_minutes_before_start' => '10',
                 'max_bookings_per_slot' => '3',   
             ],
             [
@@ -35,6 +37,7 @@ class EventSeeeder extends Seeder
                 'event_duration_minutes' => '60',
                 'cleaning_duration_minutes' => '10',
                 'advance_booking_days' => '7',
+                'min_minutes_before_start' => '10',
                 'max_bookings_per_slot' => '3',   
             ],
         ];
