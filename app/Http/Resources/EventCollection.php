@@ -29,15 +29,7 @@ class EventCollection extends ResourceCollection
                         'startsAt' => $timeslot->starts_at,
                         'endsAt' => $timeslot->ends_at,
                         'totalBookings' => $timeslot->total_confirmed_bookings,
-                        'availableQuantityLeft' => $event->max_bookings_per_slot - $timeslot->total_confirmed_bookings,
-                        'bookings' => $timeslot->bookings->map(function ($booking) {
-                            return [
-                                'id' => $booking->id,
-                                'firstName' => $booking->first_name,
-                                'lastName' => $booking->last_name,
-                                'emailAddress' => $booking->email_address,
-                            ];
-                        })
+                        'availableQuantityLeft' => $event->max_bookings_per_slot - $timeslot->total_confirmed_bookings
                     ];
                 }),
             ];

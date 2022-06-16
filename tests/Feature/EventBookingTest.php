@@ -107,4 +107,18 @@ class EventBookingTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonPath('errors.email_address.0', 'The email address must be a valid email address.');
     }
+
+    public function test_a_booking_at_end_of_slot_should_not_success()
+    {
+        $this->seed();
+
+        $response = $this->postJson('/api/events/1/bookings', [
+            'starts_at' => '2022-06-21 20:00:00',
+            'email_address' => 'nitin@gmail.com',
+            'first_name' => 'Nitin',
+            'last_name' => 'Kaware',
+        ]);
+
+        $response->assertStatus(422);
+    }
 }

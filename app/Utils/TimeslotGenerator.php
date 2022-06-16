@@ -73,6 +73,10 @@ class TimeslotGenerator
             $opensAt->addMinutes(
                 $this->event->event_duration_minutes + $this->event->cleaning_duration_minutes
             );
+
+            if($opensAt >= $closesAt) {
+                break;
+            }
         }
 
         // Cache the timeslots for this day so we don't have to generate them again.
