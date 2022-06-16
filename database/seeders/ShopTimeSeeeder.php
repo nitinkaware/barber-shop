@@ -23,6 +23,11 @@ class ShopTimeSeeeder extends Seeder
             'opens_at' => '10:00',
             'closes_at' => '22:00',
         ];
+        
+        $weekOff = [
+            'opens_at' => '00:00',
+            'closes_at' => '00:00',
+        ];
 
         $days = [
             'Monday' => $weekdays,
@@ -31,6 +36,7 @@ class ShopTimeSeeeder extends Seeder
             'Thursday' => $weekdays,
             'Friday' => $weekdays,
             'Saturday' => $weekend,
+            'Sunday' => $weekOff,
         ];
 
         foreach ($days as $day => $times) {

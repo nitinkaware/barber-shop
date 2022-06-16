@@ -17,8 +17,8 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Event::class);
-            $table->dateTime('starts_at');
-            $table->dateTime('ends_at');
+            $table->timestamp('starts_at');
+            $table->timestamp('ends_at');
             $table->string('email_address');
             $table->string('first_name');
             $table->string('last_name');

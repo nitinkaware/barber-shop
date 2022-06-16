@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AppointmentsController;
+use App\Http\Controllers\EventBookingController;
+use App\Http\Controllers\EventsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,8 +17,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::get('/test', [AppointmentsController::class, 'index']);
+Route::post('/events/{event}/bookings', [EventBookingController::class, 'store']);
+Route::get('/events', [EventsController::class, 'index']);
