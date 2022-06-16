@@ -30,7 +30,7 @@ class EventSeeeder extends Seeder
                 'cleaning_duration_minutes' => '10',
                 'advance_booking_days' => '7',
                 'min_minutes_before_start' => '10',
-                'max_bookings_per_slot' => '3',   
+                'max_bookings_per_slot' => '5',   
             ],
             [
                 'title' => 'Women Hair Color',
@@ -38,7 +38,7 @@ class EventSeeeder extends Seeder
                 'cleaning_duration_minutes' => '10',
                 'advance_booking_days' => '7',
                 'min_minutes_before_start' => '10',
-                'max_bookings_per_slot' => '3',   
+                'max_bookings_per_slot' => '10',   
             ],
         ];
 
