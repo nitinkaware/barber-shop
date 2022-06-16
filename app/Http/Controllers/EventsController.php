@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BreakCollection;
 use App\Http\Resources\EventCollection;
 use App\Http\Resources\HolidayCollection;
 use App\Models\Event;
+use App\Models\EventBreak;
 use App\Models\Holiday;
 
 class EventsController extends Controller
@@ -14,6 +16,7 @@ class EventsController extends Controller
         return [
             'events' => new EventCollection(Event::with('timeslots.bookings')->get()),
             'holidays' => new HolidayCollection(Holiday::all()),
+            'breaks' => new BreakCollection(EventBreak::all())
         ];
     }
 }

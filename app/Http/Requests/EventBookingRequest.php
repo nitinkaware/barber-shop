@@ -28,9 +28,9 @@ class EventBookingRequest extends FormRequest
     {
         return [
             'starts_at' => ['bail', 'required', 'date', 'after:now', $this->validateMinMinutesBeforeStarts(), $this->mustNotBePublicHoliday(), $this->validateAdvanceBooking(), $this->mustBeValidTimeslot(), $this->validateMaxBookings()],
-            'email_address' => ['required', 'email', $this->mustBeUniqueEmail()],
-            'first_name' => ['required'],
-            'last_name' => ['required']
+            'email_address' => ['required', 'max:255', 'email', $this->mustBeUniqueEmail()],
+            'first_name' => ['required', 'max:255'],
+            'last_name' => ['required', 'max:255']
         ];
     }
 
@@ -63,7 +63,7 @@ class EventBookingRequest extends FormRequest
                                 ->exists();
 
             if ($isBookedWithSameEmail) {
-                $fail("This email address already exits for this event");
+                $fail("This email address already exits for this event.");
             }
         };
     }
@@ -77,7 +77,7 @@ class EventBookingRequest extends FormRequest
     {
         return function ($attribute, $value, $fail) {
             if (now()->diffInMinutes($this->startsAt()) < $this->event->min_minutes_before_start) {
-                $fail("The minimum minutes before booking can be done is {$this->event->min_minutes_before_start}");
+                $fail("The minimum minutes before booking can be done is {$this->event->min_minutes_before_start}.");
             }
         };
     }
@@ -91,7 +91,7 @@ class EventBookingRequest extends FormRequest
     {
         return function ($attribute, $value, $fail) {
             if (Holiday::isHoliday($this->startsAt())) {
-                $fail('The selected timeslot is a Holiday');
+                $fail('The selected timeslot is a Holiday.');
             }
         };
     }

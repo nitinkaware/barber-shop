@@ -12,7 +12,7 @@ class EventBookingController extends Controller
         $event->createBooking($request->validated(), $request->startsAt());
 
         return response()->json([
-            'message' => 'Booking created successfully'
+            'message' => 'Booking created successfully.'
         ], 201);
     }
 }
