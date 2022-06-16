@@ -8,7 +8,7 @@ use App\Models\ShopTime;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
-class TimeSlot
+class TimeslotGenerator
 {
     protected $event;
 

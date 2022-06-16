@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Event;
 use App\Models\Holiday;
-use App\Utils\TimeSlot;
+use App\Utils\TimeslotGenerator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
-use Illuminate\Validation\Rule;
 
 class EventBookingRequest extends FormRequest
 {
@@ -29,8 +27,8 @@ class EventBookingRequest extends FormRequest
     public function rules()
     {
         return [
-            'starts_at' => ['bail', 'required', 'date', 'after:now', $this->validateMinMinutesBeforeStarts(), $this->mustNotBePublicHoliday(), $this->validateAdvanceBooking(), $this->mustBeValidTimeSlot(), $this->validateMaxBookings()],
-            'email_address' => ['required', 'email', Rule::unique('bookings')->where('event_id', $this->event->id)->where('starts_at', $this->startsAt())],
+            'starts_at' => ['bail', 'required', 'date', 'after:now', $this->validateMinMinutesBeforeStarts(), $this->mustNotBePublicHoliday(), $this->validateAdvanceBooking(), $this->mustBeValidTimeslot(), $this->validateMaxBookings()],
+            'email_address' => ['required', 'email', $this->mustBeUniqueEmail()],
             'first_name' => ['required'],
             'last_name' => ['required']
         ];
@@ -41,6 +39,22 @@ class EventBookingRequest extends FormRequest
         return [
             'email_address.unique' => 'This email address already exits for this event',
         ];
+    }
+
+    public function mustBeUniqueEmail()
+    {
+        return function ($attribute, $value, $fail) {
+            $isBookedWithSameEmail = $this->event
+                                ->timeslots()
+                                ->join('bookings', 'timeslots.id', '=', 'bookings.timeslot_id')
+                                ->where('bookings.email_address', $this->email_address)
+                                ->where('timeslots.starts_at', $this->startsAt())
+                                ->exists();
+
+            if ($isBookedWithSameEmail) {
+                $fail("This email address already exits for this event");
+            }
+        };
     }
 
     public function validateMinMinutesBeforeStarts()
@@ -61,10 +75,10 @@ class EventBookingRequest extends FormRequest
         };
     }
 
-    public function mustBeValidTimeSlot()
+    public function mustBeValidTimeslot()
     {
         return function ($attribute, $value, $fail) {
-            $timeslot = new TimeSlot($this->event, $this->startsAt());
+            $timeslot = new TimeslotGenerator($this->event, $this->startsAt());
 
             if (!$timeslot->getSlots()->contains(function($timeslot) {
                 return Carbon::parse($timeslot)->eq($this->startsAt());
@@ -79,8 +93,9 @@ class EventBookingRequest extends FormRequest
     {
         return function ($attribute, $value, $fail) {
             $maxBookingCount = $this->event
-                                    ->bookings()
+                                    ->timeslots()
                                     ->where('starts_at', $this->startsAt())
+                                    ->join('bookings', 'timeslots.id', '=', 'bookings.timeslot_id')
                                     ->count();
 
             if($maxBookingCount >= $this->event->max_bookings_per_slot) {

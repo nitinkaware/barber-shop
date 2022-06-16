@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Event;
+use App\Models\Timeslot;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,9 +17,7 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Event::class);
-            $table->timestamp('starts_at');
-            $table->timestamp('ends_at');
+            $table->foreignIdFor(Timeslot::class)->constrained();
             $table->string('email_address');
             $table->string('first_name');
             $table->string('last_name');

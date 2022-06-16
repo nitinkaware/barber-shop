@@ -2,15 +2,45 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Event extends Model
 {
     use HasFactory;
 
-    public function bookings()
+    public function timeslots()
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Timeslot::class);
+    }
+
+    public function createBooking(array $attributes, Carbon $startAt)
+    {
+        try {
+            DB::beginTransaction();
+
+            $timeslot = Timeslot::firstOrCreate([
+                'event_id' => $this->id,
+                'starts_at' => $attributes['starts_at'],
+                'ends_at' => $startAt->addMinutes($this->event_duration_minutes)
+            ]);
+    
+            Booking::create($attributes + [
+                'timeslot_id' => $timeslot->id,
+            ]);
+    
+            $timeslot->increment('total_confirmed_bookings');
+
+            DB::commit();
+
+            return true;
+        } catch(Exception $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
     }
 }

@@ -12,6 +12,10 @@ class Holiday extends Model
 
     public $timestamps = false;
 
+    public $dates = [
+        'date'
+    ];
+
     public static function isHoliDay(Carbon $dateTime)
     {
         return self::whereDate('date', $dateTime->toDateString())

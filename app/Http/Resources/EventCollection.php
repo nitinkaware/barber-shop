@@ -23,14 +23,21 @@ class EventCollection extends ResourceCollection
                 'advanceBookingAllowedInDays' => $event->advance_booking_days,
                 'minimumMinutesBeforeStart' => $event->min_minutes_before_start,
                 'maxBookingsPerSlot' => $event->max_bookings_per_slot,
-                'bookings' => $event->bookings->map(function ($booking) {
+                'timeslots' => $event->timeslots->map(function ($timeslot) use ($event) {
                     return [
-                        'id' => $booking->id,
-                        'startsAt' => $booking->starts_at,
-                        'endsAt' => $booking->ends_at,
-                        'firstName' => $booking->first_name,
-                        'lastName' => $booking->last_name,
-                        'emailAddress' => $booking->email_address,
+                        'id' => $timeslot->id,
+                        'startsAt' => $timeslot->starts_at,
+                        'endsAt' => $timeslot->ends_at,
+                        'totalBookings' => $timeslot->total_confirmed_bookings,
+                        'availableQuantityLeft' => $event->max_bookings_per_slot - $timeslot->total_confirmed_bookings,
+                        'bookings' => $timeslot->bookings->map(function ($booking) {
+                            return [
+                                'id' => $booking->id,
+                                'firstName' => $booking->first_name,
+                                'lastName' => $booking->last_name,
+                                'emailAddress' => $booking->email_address,
+                            ];
+                        })
                     ];
                 }),
             ];

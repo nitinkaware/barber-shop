@@ -9,7 +9,12 @@ class Booking extends Model
 {
     use HasFactory;
 
-    public $guarded = [];
+    public $fillable = [
+        'email_address',
+        'first_name',
+        'last_name',
+        'timeslot_id',
+    ];
 
     public function event()
     {
