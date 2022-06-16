@@ -17,6 +17,12 @@ class Event extends Model
         return $this->hasMany(Timeslot::class);
     }
 
+    /**
+     * Create a new timeslot and booking for this event.
+     * 
+     * @return Boolean
+     * @throws Exception
+     */
     public function createBooking(array $attributes, Carbon $startAt)
     {
         try {

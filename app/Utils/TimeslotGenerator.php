@@ -22,6 +22,8 @@ class TimeslotGenerator
     }
 
     /**
+     * Generate a list of timeslots for the given event.
+     * 
      * @return Collection
      */
     public function getSlots()
@@ -30,12 +32,15 @@ class TimeslotGenerator
         
         $timeslotKey = "{$day}-{$this->event->id}";
 
+        // If we have already generated the timeslots for this day, just return them.
         if(cache()->has($timeslotKey)) {
             return cache()->get($timeslotKey);
         }
 
         $shopTimes = ShopTime::where('day', $this->bookingDay->format('l'))->firstOrFail();
 
+        // Since we've stored the break times in the database as a string, 
+        // we need to convert them to an Carbon object.
         $breakTimes = EventBreak::all()->map(function($break) {
             return (object) [
                 "title" => $break->title,
@@ -51,6 +56,8 @@ class TimeslotGenerator
         $timeslots = [];
         
         while ($opensAt <= $closesAt) {
+
+            // If the current time is during a break, skip it.
             $breakStartsAt = $breakTimes->first(function($break) use ($opensAt) {
                 return $opensAt->gte($break->starts_at) && $opensAt->lt($break->ends_at);
             });
@@ -68,6 +75,7 @@ class TimeslotGenerator
             );
         }
 
+        // Cache the timeslots for this day so we don't have to generate them again.
         cache()->put($timeslotKey, collect($timeslots), Carbon::now()->addDay());
 
         return collect($timeslots);

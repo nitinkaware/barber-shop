@@ -16,7 +16,12 @@ class Holiday extends Model
         'date'
     ];
 
-    public static function isHoliDay(Carbon $dateTime)
+    /**
+     * Check if the given date is a holiday.
+     * 
+     * @return Boolean
+     */
+    public static function isHoliday(Carbon $dateTime)
     {
         return self::whereDate('date', $dateTime->toDateString())
             ->exists();

@@ -34,6 +34,11 @@ class EventBookingRequest extends FormRequest
         ];
     }
 
+    /**
+     * Get the validation error messages that apply to the request.
+     * 
+     * @return array
+     */
     public function messages() 
     {
         return [
@@ -41,6 +46,12 @@ class EventBookingRequest extends FormRequest
         ];
     }
 
+
+    /**
+     * Validate that the email address is unique for this event and timeslot.
+     * 
+     * @return Closure
+     */
     public function mustBeUniqueEmail()
     {
         return function ($attribute, $value, $fail) {
@@ -57,6 +68,11 @@ class EventBookingRequest extends FormRequest
         };
     }
 
+    /**
+     * Validate that the booking is at least minMinutesBeforeStarts minutes before the event starts.
+     * 
+     * @return Closure
+     */
     public function validateMinMinutesBeforeStarts()
     {
         return function ($attribute, $value, $fail) {
@@ -66,15 +82,25 @@ class EventBookingRequest extends FormRequest
         };
     }
     
+    /**
+     * Validate that the booking is not on a public holiday.
+     * 
+     * @return Closure
+     */
     public function mustNotBePublicHoliday()
     {
         return function ($attribute, $value, $fail) {
-            if (Holiday::isHoliDay($this->startsAt())) {
+            if (Holiday::isHoliday($this->startsAt())) {
                 $fail('The selected timeslot is a Holiday');
             }
         };
     }
 
+    /**
+     * Validate that the timeslot user has selected is a valid timeslot.
+     * 
+     * @return Closure
+     */
     public function mustBeValidTimeslot()
     {
         return function ($attribute, $value, $fail) {
@@ -89,6 +115,11 @@ class EventBookingRequest extends FormRequest
     }
     
     
+    /**
+     * Validate that the booking is not more than maxBookings per timeslot.
+     * 
+     * @return Closure
+     */
     public function validateMaxBookings()
     {
         return function ($attribute, $value, $fail) {
@@ -104,6 +135,11 @@ class EventBookingRequest extends FormRequest
         };
     }
 
+    /**
+     * Validate that the booking is not more than advance_booking_days threshold.
+     * 
+     * @return Closure
+     */
     public function validateAdvanceBooking()
     {
         return function ($attribute, $value, $fail) {
@@ -115,6 +151,11 @@ class EventBookingRequest extends FormRequest
         };
     }
 
+    /**
+     * Get the date that the booking starts at in Carbon format.
+     * 
+     * @return Carbon
+     */
     public function startsAt()
     {
         return Carbon::parse($this->starts_at);

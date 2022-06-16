@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EventBookingRequest;
-use App\Models\Booking;
 use App\Models\Event;
-use App\Models\Timeslot;
-use App\Utils\Slot;
-use Illuminate\Http\Request;
 
 class EventBookingController extends Controller
 {
